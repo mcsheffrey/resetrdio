@@ -12,21 +12,17 @@ try:
   verifier = raw_input('Then enter the code: ').strip()
   rdio.complete_authentication(verifier)
 
-  # find out what playlists you created
-  ownedPlaylists = rdio.call('getPlaylists')['result']['owned']
-  collabPlaylists = rdio.call('getPlaylists')['result']['collab']
-  subscribedPlaylists = rdio.call('getPlaylists')['result']['subscribed']
+  # find out what playlists you are subscribed to
+  collab_playlists = rdio.call('getPlaylists')['result']['collab']
+  subscribed_playlists = rdio.call('getPlaylists')['result']['subscribed']
 
-  # list them
-  for playlist in ownedPlaylists:
-    print '%(shortUrl)s\t%(name)s' % playlist
-    print playlist['key']
-
-  for playlist in collabPlaylists:
+  # loop through collaborations and unsubscribe
+  for playlist in collab_playlists:
     print '%(shortUrl)s\t%(name)s' % playlist
     rdio.call('setPlaylistCollaborating', {'playlist': playlist['key'], 'collaborating': 'false'})
 
-  for playlist in subscribedPlaylists:
+  # loop through playlist subscriptions and ubsubscribe
+  for playlist in subscribed_playlists:
     print '%(shortUrl)s\t%(name)s' % playlist
     rdio.call('removeFromCollection', {'keys': playlist['key']})
 
